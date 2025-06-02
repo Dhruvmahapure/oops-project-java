@@ -1,112 +1,96 @@
-package payroll;
+package pizzabillgenerator;
 
-import java.util.ArrayList;
-import java.util.List;
 
-abstract class Employee {
-    private String name;
-    private int id;
+class pizza {
+    private int price;
 
-    public Employee(String name, int id) {
-        this.name = name;
-        this.id = id;
+    private boolean veg;
+
+    private int baseprice;
+
+    private int extrcheese = 100;
+    private int extretoping = 50;
+    private int takebag = 20;
+
+    private boolean isExtracheese = false;
+    private boolean isExtratoping = false;
+    private boolean isExtrabag = false;
+
+    public pizza(boolean veg) {
+        this.veg = veg;
+        if (this.veg) {
+            this.price = 300;
+        } else {
+            this.price = 400;
+        }
+
+        baseprice = this.price;
     }
 
-    public String getName() {
-        return name;
+    public int Extracheese() {
+
+        isExtracheese = true;
+        this.price += extrcheese;
+
+        return this.price;
     }
 
-    public int getId() {
-        return id;
+    public int topping() {
+
+        isExtratoping = true;
+        this.price += extretoping; // Fixed: added instead of assigning
+
+        return this.price;
     }
 
-    // Abstract method to be implemented by subclasses
-    public abstract double calculateSalary();
+    public int takeaway() {
 
-    @Override
-    public String toString() {
-        return "Employee [name=" + name + ", id=" + id + ", salary=" + calculateSalary() + "]";
+        isExtrabag = true;
+        this.price += takebag; // Fixed: added instead of assigning
+
+        return this.price;
+    }
+
+    public void getPrice() {
+        String bill = "";
+        if (isExtracheese) {
+            bill += "extracheese price is= " + extrcheese + "\n";
+        }
+
+        if (isExtratoping) {
+            bill += "Extra topping price is= " + extretoping + "\n";
+        }
+
+        if (isExtrabag) {
+            bill += "Extra takeaway bag price is= " + takebag + "\n"; // Fixed: print correct value
+        }
+
+        bill += "bill is = " + this.price + "\n";
+        System.out.println(bill);
     }
 }
 
-class FullTimeEmployee extends Employee {
-    private double monthlySalary;
-
-    public FullTimeEmployee(String name, int id, double monthlySalary) {
-        super(name, id);
-        this.monthlySalary = monthlySalary;
-    }
-
-    @Override
-    public double calculateSalary() {
-        return monthlySalary;
-    }
-}
-
-class PartTimeEmployee extends Employee {
-    private int hoursWorked;
-    private double hourlyRate;
-
-    public PartTimeEmployee(String name, int id, int hoursWorked, double hourlyRate) {
-        super(name, id);
-        this.hoursWorked = hoursWorked;
-        this.hourlyRate = hourlyRate;
-    }
-
-    @Override
-    public double calculateSalary() {
-        return hoursWorked * hourlyRate;
-    }
-}
-
-class PayrollSystem {
-    private List<Employee> employeeList;
-
-    public PayrollSystem() {
-        employeeList = new ArrayList<>();
-    }
-
-    public void addEmployee(Employee employee) {
-        employeeList.add(employee);
-    }
-
-    public void removeEmployee(int id) {
-        Employee employeeToRemove = null;
-        for (Employee employee : employeeList) {
-            if (employee.getId() == id) {
-                employeeToRemove = employee;
-                break;
-            }
-        }
-        if (employeeToRemove != null) {
-            employeeList.remove(employeeToRemove);
-        }
-    }
-
-    public void displayEmployees() {
-        for (Employee employee : employeeList) {
-            System.out.println(employee);
-        }
+class specialPizza extends pizza {
+    public specialPizza(boolean veg) {
+        super(veg);
+        super.Extracheese();
+        super.topping();
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        PayrollSystem payrollSystem = new PayrollSystem();
+        pizza obj = new pizza(true);
+        obj.Extracheese();
+        obj.takeaway();
+        obj.topping();
+        obj.getPrice();
 
-        FullTimeEmployee emp1 = new FullTimeEmployee("SMITH JOHNSON", 101, 5000.0);
-        PartTimeEmployee emp2 = new PartTimeEmployee("KANE WILLIAMOSON", 102, 30, 15.0);
 
-        payrollSystem.addEmployee(emp1);
-        payrollSystem.addEmployee(emp2);
+        System.out.println("special pizza");
 
-        System.out.println("Initial Employee Details:");
-        payrollSystem.displayEmployees();
-
-        System.out.println("\nRemoving Employee...");
-        payrollSystem.removeEmployee(101);
-
-        System.out.println("\nRemaining Employee Details:");
-        payrollSystem.displayEmployees();
+        specialPizza obj1=new specialPizza(false);
+        obj.takeaway();
+        obj.getPrice();
     }
 }
